@@ -1,0 +1,327 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 0 1 4 8
+    bytecblock "assetId" "price" 0x151f7c75
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // smart_contracts/asa_marketplace/contract.py:7
+    // self.assetId = UInt64(0)
+    bytec_0 // "assetId"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/asa_marketplace/contract.py:8
+    // self.price = UInt64(0)
+    bytec_1 // "price"
+    intc_0 // 0
+    app_global_put
+
+main_after_if_else@2:
+    // smart_contracts/asa_marketplace/contract.py:5
+    // class AsaMarketplace(ARC4Contract):
+    txn NumAppArgs
+    bz main___algopy_default_create@13
+    txn OnCompletion
+    !
+    assert // OnCompletion must be NoOp
+    txn ApplicationID
+    assert
+    pushbytess 0xbcafae33 0x16e64521 0x081bc21c 0xbbfcf762 // method "set_asset(uint64)uint64", method "list_for_sale(axfer,uint64)void", method "delist()uint64", method "buy(pay,uint64)uint64"
+    txna ApplicationArgs 0
+    match set_asset list_for_sale delist buy
+    err
+
+main___algopy_default_create@13:
+    txn OnCompletion
+    !
+    txn ApplicationID
+    !
+    &&
+    assert // OnCompletion must be NoOp && can only call when creating
+    intc_1 // 1
+    return
+
+
+// smart_contracts.asa_marketplace.contract.AsaMarketplace.set_asset[routing]() -> void:
+set_asset:
+    // smart_contracts/asa_marketplace/contract.py:10
+    // @abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    dup
+    btoi
+    // smart_contracts/asa_marketplace/contract.py:12-18
+    // # opt-in
+    // itxn.AssetTransfer(
+    //     xfer_asset=asset,
+    //     asset_receiver=Global.current_application_address,
+    //     asset_amount=0,
+    //     fee=0
+    // ).submit()
+    itxn_begin
+    // smart_contracts/asa_marketplace/contract.py:15
+    // asset_receiver=Global.current_application_address,
+    global CurrentApplicationAddress
+    // smart_contracts/asa_marketplace/contract.py:16
+    // asset_amount=0,
+    intc_0 // 0
+    itxn_field AssetAmount
+    itxn_field AssetReceiver
+    dup
+    itxn_field XferAsset
+    // smart_contracts/asa_marketplace/contract.py:12-13
+    // # opt-in
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    // smart_contracts/asa_marketplace/contract.py:17
+    // fee=0
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/asa_marketplace/contract.py:12-18
+    // # opt-in
+    // itxn.AssetTransfer(
+    //     xfer_asset=asset,
+    //     asset_receiver=Global.current_application_address,
+    //     asset_amount=0,
+    //     fee=0
+    // ).submit()
+    itxn_submit
+    // smart_contracts/asa_marketplace/contract.py:20
+    // self.assetId = asset.id
+    bytec_0 // "assetId"
+    swap
+    app_global_put
+    // smart_contracts/asa_marketplace/contract.py:10
+    // @abimethod()
+    bytec_2 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.asa_marketplace.contract.AsaMarketplace.list_for_sale[routing]() -> void:
+list_for_sale:
+    // smart_contracts/asa_marketplace/contract.py:24
+    // @abimethod
+    txn GroupIndex
+    intc_1 // 1
+    -
+    dup
+    gtxns TypeEnum
+    intc_2 // axfer
+    ==
+    assert // transaction type is axfer
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/asa_marketplace/contract.py:26
+    // assert xfer.asset_receiver == Global.current_application_address, "receiver is not the application"
+    dig 1
+    gtxns AssetReceiver
+    global CurrentApplicationAddress
+    ==
+    assert // receiver is not the application
+    // smart_contracts/asa_marketplace/contract.py:27
+    // assert xfer.asset_amount > 0, "must be greater than zero"
+    swap
+    gtxns AssetAmount
+    assert // must be greater than zero
+    // smart_contracts/asa_marketplace/contract.py:28
+    // assert price > 0, "Invalid price"
+    dup
+    assert // Invalid price
+    // smart_contracts/asa_marketplace/contract.py:30
+    // self.price = price
+    bytec_1 // "price"
+    swap
+    app_global_put
+    // smart_contracts/asa_marketplace/contract.py:24
+    // @abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.asa_marketplace.contract.AsaMarketplace.delist[routing]() -> void:
+delist:
+    // smart_contracts/asa_marketplace/contract.py:34
+    // assert Txn.sender == Global.creator_address, "Not application creator"
+    txn Sender
+    global CreatorAddress
+    ==
+    assert // Not application creator
+    // smart_contracts/asa_marketplace/contract.py:36
+    // available = self.total_asset_owned_by_application()
+    callsub total_asset_owned_by_application
+    // smart_contracts/asa_marketplace/contract.py:37
+    // assert available > 0, "No asset to delist"
+    dup
+    assert // No asset to delist
+    // smart_contracts/asa_marketplace/contract.py:39-44
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.assetId,
+    //     asset_receiver=Global.creator_address,
+    //     asset_amount=available,
+    //     fee=0
+    // ).submit()
+    itxn_begin
+    // smart_contracts/asa_marketplace/contract.py:40
+    // xfer_asset=self.assetId,
+    intc_0 // 0
+    bytec_0 // "assetId"
+    app_global_get_ex
+    assert // check self.assetId exists
+    // smart_contracts/asa_marketplace/contract.py:41
+    // asset_receiver=Global.creator_address,
+    global CreatorAddress
+    dig 2
+    itxn_field AssetAmount
+    itxn_field AssetReceiver
+    itxn_field XferAsset
+    // smart_contracts/asa_marketplace/contract.py:39
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    // smart_contracts/asa_marketplace/contract.py:43
+    // fee=0
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/asa_marketplace/contract.py:39-44
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.assetId,
+    //     asset_receiver=Global.creator_address,
+    //     asset_amount=available,
+    //     fee=0
+    // ).submit()
+    itxn_submit
+    // smart_contracts/asa_marketplace/contract.py:32
+    // @abimethod
+    itob
+    bytec_2 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.asa_marketplace.contract.AsaMarketplace.buy[routing]() -> void:
+buy:
+    // smart_contracts/asa_marketplace/contract.py:48
+    // @abimethod
+    txn GroupIndex
+    intc_1 // 1
+    -
+    dup
+    gtxns TypeEnum
+    intc_1 // pay
+    ==
+    assert // transaction type is pay
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    dup
+    btoi
+    // smart_contracts/asa_marketplace/contract.py:50
+    // assert mbrPay.receiver == Global.creator_address, "Must transfer to application creator"
+    dig 2
+    gtxns Receiver
+    global CreatorAddress
+    ==
+    assert // Must transfer to application creator
+    // smart_contracts/asa_marketplace/contract.py:52
+    // available = self.total_asset_owned_by_application()
+    callsub total_asset_owned_by_application
+    // smart_contracts/asa_marketplace/contract.py:53
+    // assert available >= qty, "Insufficient available asset"
+    dig 1
+    >=
+    assert // Insufficient available asset
+    // smart_contracts/asa_marketplace/contract.py:55
+    // total_mbr = qty * self.price
+    intc_0 // 0
+    bytec_1 // "price"
+    app_global_get_ex
+    assert // check self.price exists
+    dig 1
+    *
+    // smart_contracts/asa_marketplace/contract.py:56
+    // assert mbrPay.amount == total_mbr, "Insufficient payment"
+    uncover 3
+    gtxns Amount
+    ==
+    assert // Insufficient payment
+    // smart_contracts/asa_marketplace/contract.py:58-63
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.assetId,
+    //     asset_receiver=Txn.sender,
+    //     asset_amount=qty,
+    //     fee=0
+    // ).submit()
+    itxn_begin
+    // smart_contracts/asa_marketplace/contract.py:59
+    // xfer_asset=self.assetId,
+    intc_0 // 0
+    bytec_0 // "assetId"
+    app_global_get_ex
+    assert // check self.assetId exists
+    // smart_contracts/asa_marketplace/contract.py:60
+    // asset_receiver=Txn.sender,
+    txn Sender
+    uncover 2
+    itxn_field AssetAmount
+    itxn_field AssetReceiver
+    itxn_field XferAsset
+    // smart_contracts/asa_marketplace/contract.py:58
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    // smart_contracts/asa_marketplace/contract.py:62
+    // fee=0
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/asa_marketplace/contract.py:58-63
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.assetId,
+    //     asset_receiver=Txn.sender,
+    //     asset_amount=qty,
+    //     fee=0
+    // ).submit()
+    itxn_submit
+    // smart_contracts/asa_marketplace/contract.py:48
+    // @abimethod
+    bytec_2 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.asa_marketplace.contract.AsaMarketplace.total_asset_owned_by_application() -> uint64:
+total_asset_owned_by_application:
+    // smart_contracts/asa_marketplace/contract.py:69
+    // return Asset(self.assetId).balance(Global.current_application_address)
+    global CurrentApplicationAddress
+    intc_0 // 0
+    bytec_0 // "assetId"
+    app_global_get_ex
+    assert // check self.assetId exists
+    asset_holding_get AssetBalance
+    assert // account opted into asset
+    retsub
