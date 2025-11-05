@@ -18,11 +18,11 @@ This dApp provides a simple and intuitive interface for users to:
 
 ### Features
 
-* **Decentralized Asset Trading** — no central authority involved.
-* **Smart Contract Integration** — transactions are validated and executed by Algorand smart contracts.
-* **User-Friendly Interface** — clear and responsive UI for easy interaction.
-* **Secure Transactions** — guaranteed by Algorand’s consensus and TEAL scripts.
-* **Low Fees & Fast Confirmation** — leveraging Algorand’s high-performance network.
+* **Decentralized Asset Trading**, no central authority involved.
+* **Smart Contract Integration**, transactions are validated and executed by Algorand smart contracts.
+* **User-Friendly Interface**, clear and responsive UI for easy interaction.
+* **Secure Transactions**, guaranteed by Algorand’s consensus.
+* **Low Fees & Fast Confirmation**, leveraging Algorand’s high-performance network.
 
 ### Deployed Smart Contract
 
