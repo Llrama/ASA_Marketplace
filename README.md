@@ -28,13 +28,6 @@ This dApp provides a simple and intuitive interface for users to:
 
 Contract Address: `https://lora.algokit.io/testnet/application/748960260`
 
-### Tech Stack
-
-* **Algorand SDK / PyTeal / Beaker** for smart contract logic
-* **Algokit** for project setup and deployment
-* **React / Vite / Tailwind** for frontend (if applicable)
-* **Python / Node.js** for backend services
-
 ### Installation
 
 ```bash
