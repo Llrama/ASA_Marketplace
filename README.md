@@ -1,4 +1,49 @@
 # ASA_Marketplace
+My dApp is a ASA Marketplace built on Algorand.
+
+### Project Description
+
+**ASA Marketplace** is a decentralized application (dApp) built on the **Algorand blockchain**.
+It allows users to **create, list, buy, and sell Algorand Standard Assets (ASA)** in a fully decentralized and transparent environment.
+The project demonstrates the use of **smart contracts and Algorand SDK** to enable secure asset exchange without intermediaries.
+
+### What It Does
+
+This dApp provides a simple and intuitive interface for users to:
+
+* Mint and manage their own ASAs.
+* List ASAs for sale with a specified price.
+* Purchase listed ASAs using Algo or other supported tokens.
+* Interact with Algorand smart contracts to ensure secure and trustless transactions.
+
+### Features
+
+* **Decentralized Asset Trading** — no central authority involved.
+* **Smart Contract Integration** — transactions are validated and executed by Algorand smart contracts.
+* **User-Friendly Interface** — clear and responsive UI for easy interaction.
+* **Secure Transactions** — guaranteed by Algorand’s consensus and TEAL scripts.
+* **Low Fees & Fast Confirmation** — leveraging Algorand’s high-performance network.
+
+### Deployed Smart Contract
+
+Contract Address: `https://lora.algokit.io/testnet/application/748960260`
+
+### Tech Stack
+
+* **Algorand SDK / PyTeal / Beaker** for smart contract logic
+* **Algokit** for project setup and deployment
+* **React / Vite / Tailwind** for frontend (if applicable)
+* **Python / Node.js** for backend services
+
+### Installation
+
+```bash
+git clone https://github.com/Llrama/ASA_Marketplace.git
+cd ASA_Marketplace
+algokit project run build
+```
+
+---
 
 This project has been generated using AlgoKit. See below for default getting started instructions.
 
